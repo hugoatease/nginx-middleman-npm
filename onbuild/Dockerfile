@@ -36,8 +36,7 @@ WORKDIR /build
 
 ONBUILD COPY vhost.conf /etc/nginx/sites-enabled/default
 ONBUILD ADD . /build
-ONBUILD RUN bundle install; npm install; bundle exec middleman build
-ONBUILD RUN cp -rf ./build/* /var/www/html
+ONBUILD RUN bundle install; npm install;
 
 EXPOSE 80 443
 
