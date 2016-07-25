@@ -31,6 +31,7 @@ RUN ln -sf /dev/stdout /var/log/nginx/access.log \
   && ln -sf /dev/stderr /var/log/nginx/error.log
 
 RUN gem install middleman
+RUN npm install -g webpack
 RUN mkdir /build
 WORKDIR /build
 
