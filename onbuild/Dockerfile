@@ -15,7 +15,7 @@ RUN set -ex \
   done
 
 ENV NPM_CONFIG_LOGLEVEL info
-ENV NODE_VERSION 4.4.4
+ENV NODE_VERSION 4.6.0
 
 RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-x64.tar.xz" \
   && curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/SHASUMS256.txt.asc" \
@@ -26,18 +26,21 @@ RUN curl -SLO "https://nodejs.org/dist/v$NODE_VERSION/node-v$NODE_VERSION-linux-
 
 RUN apt-get update -y && apt-get install -y nginx git
 
+RUN curl -o- -L https://yarnpkg.com/install.sh | bash
+ENV PATH "$PATH:/root/.yarn/bin"
+
 # forward request and error logs to docker log collector
 RUN ln -sf /dev/stdout /var/log/nginx/access.log \
   && ln -sf /dev/stderr /var/log/nginx/error.log
 
 RUN gem install middleman
-RUN npm install -g webpack
+RUN yarn global add webpack
 RUN mkdir /build
 WORKDIR /build
 
 ONBUILD COPY vhost.conf /etc/nginx/sites-enabled/default
 ONBUILD ADD . /build
-ONBUILD RUN bundle install; npm install;
+ONBUILD RUN bundle install; yarn install;
 
 EXPOSE 80 443
 
